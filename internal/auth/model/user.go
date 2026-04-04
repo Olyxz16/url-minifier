@@ -13,4 +13,3 @@ type User struct {
 	Email    string
 	Provider Provider
 }
-

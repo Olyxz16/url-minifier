@@ -10,7 +10,10 @@ import (
 
 type contextKey string
 
-const UserEmailKey contextKey = "user_email"
+const (
+	UserEmailKey contextKey = "user_email"
+	UserIDKey    contextKey = "user_id"
+)
 
 func AuthMiddleware(tokenService *services.TokenService) func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
@@ -35,6 +38,7 @@ func AuthMiddleware(tokenService *services.TokenService) func(http.Handler) http
 			}
 
 			ctx := context.WithValue(r.Context(), UserEmailKey, token.Subject)
+			ctx = context.WithValue(ctx, UserIDKey, token.Jti)
 			next.ServeHTTP(w, r.WithContext(ctx))
 		})
 	}

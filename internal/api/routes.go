@@ -9,10 +9,12 @@ import (
 
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/controller"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/services"
+	urlcontroller "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/controller"
+	urlservice "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/service"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/api/middlewares"
 )
 
-func RegisterRoutes(userService *services.UserService, tokenService *services.TokenService, googleClientID string, limiter *redis_rate.Limiter) http.Handler {
+func RegisterRoutes(userService *services.UserService, tokenService *services.TokenService, urlService *urlservice.UrlService, googleClientID string, limiter *redis_rate.Limiter) http.Handler {
 	r := chi.NewRouter()
 
 	r.Use(middleware.Recoverer)
@@ -25,6 +27,7 @@ func RegisterRoutes(userService *services.UserService, tokenService *services.To
 		r.Use(middleware.Logger)
 		r.Use(middlewares.RateLimitMiddleware(limiter))
 		r.Mount("/auth", controller.AuthController(userService, tokenService, googleClientID))
+		r.Mount("/urls", urlcontroller.UrlController(urlService, tokenService))
 	})
 
 	return r

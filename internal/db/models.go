@@ -8,6 +8,16 @@ import (
 	"github.com/jackc/pgx/v5/pgtype"
 )
 
+type Url struct {
+	ID          pgtype.UUID
+	CreatorID   pgtype.UUID
+	ShortUrl    string
+	RedirectUrl string
+	HitCount    int32
+	CreatedAt   pgtype.Timestamptz
+	ExpiresAt   pgtype.Timestamptz
+}
+
 type User struct {
 	ID        pgtype.UUID
 	Email     string

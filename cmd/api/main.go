@@ -7,6 +7,8 @@ import (
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/api"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/repositories"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/services"
+	urlrepos "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/repositories"
+	urlservices "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/service"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/config"
 	"github.com/go-redis/redis_rate/v10"
 	"go.uber.org/zap"
@@ -39,9 +41,12 @@ func main() {
 	userService := services.NewUserService(userRepo)
 	tokenService := services.NewTokenService(cfg)
 
+	urlRepo := urlrepos.NewUrlRepository(pool)
+	urlService := urlservices.NewUrlService(urlRepo)
+
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		Handler: api.RegisterRoutes(userService, tokenService, gothConf.GoogleAccessKeyId, limiter),
+		Handler: api.RegisterRoutes(userService, tokenService, urlService, gothConf.GoogleAccessKeyId, limiter),
 	}
 
 	if err = server.ListenAndServe() ; err != nil {
