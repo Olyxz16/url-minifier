@@ -3,6 +3,7 @@
 #
 # Binaries for programs and plugins
 bin/
+build/
 *.exe
 *.exe~
 *.dll
@@ -28,3 +29,7 @@ go.work.sum
 # env file
 .env
 sops.agekey
+
+# Devbox
+devbox.d/
+dump.rdb

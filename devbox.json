@@ -4,14 +4,15 @@
     "go@1.26.1",
     "air@1.61.7",
     "postgresql_17@latest",
+    "redis@7.2.4",
     "atlas@latest",
     "sqlc@latest"
   ],
   "shell": {
     "init_hook": [],
     "scripts": {
-      "up": "process-compose up",
-      "down": "process-compose down",
+      "up": "PC_PORT_NUM=9099 process-compose up",
+      "down": "PC_PORT_NUM=9099 process-compose down",
       "watch:api": "air -c air.api.toml",
       "migrate": "atlas migrate apply --dir 'file://internal/db/migrations' --url 'postgres://postgres:postgres@localhost:5432/app?sslmode=disable'",
       "migrate:diff": "atlas migrate diff $1 --dir 'file://internal/db/migrations' --to 'file://internal/db/schema.sql' --dev-url 'docker://postgres/16/dev'"

@@ -16,6 +16,7 @@ func main() {
 
 	rootCmd.AddCommand(commands.NewLoginCommand())
 	rootCmd.AddCommand(commands.NewWhoAmICommand())
+	rootCmd.AddCommand(commands.NewURLCommand())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

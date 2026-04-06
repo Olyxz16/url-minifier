@@ -12,6 +12,7 @@ import (
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/urls/service"
 	"github.com/go-chi/chi/v5"
 	"github.com/google/uuid"
+	"go.uber.org/zap"
 )
 
 type CreateUrlRequest struct {
@@ -62,6 +63,7 @@ func HandleCreateUrl(s *service.UrlService) http.HandlerFunc {
 
 		url, err := s.CreateUrl(r.Context(), userID, req.RedirectUrl)
 		if err != nil {
+			zap.L().Error("Failed to create short URL", zap.Error(err), zap.String("user_id", userID.String()))
 			http.Error(w, "Failed to create short URL", http.StatusInternalServerError)
 			return
 		}

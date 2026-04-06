@@ -14,6 +14,7 @@ import (
 const createUrl = `-- name: CreateUrl :one
 INSERT INTO urls (id, creator_id, short_url, redirect_url)
 VALUES ($1, $2, $3, $4)
+ON CONFLICT(redirect_url) DO UPDATE SET id = urls.id
 RETURNING id, creator_id, short_url, redirect_url, hit_count, created_at, expires_at
 `
 

@@ -1,6 +1,7 @@
 -- name: CreateUrl :one
 INSERT INTO urls (id, creator_id, short_url, redirect_url)
 VALUES ($1, $2, $3, $4)
+ON CONFLICT(redirect_url) DO UPDATE SET id = urls.id
 RETURNING *;
 
 -- name: GetUrlById :one
