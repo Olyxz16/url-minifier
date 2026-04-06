@@ -2,18 +2,31 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: db-migration
-  namespace: template
+  namespace: url-minifier
 spec:
   backoffLimit: 3
   ttlSecondsAfterFinished: 600
   template:
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
       imagePullSecrets:
         - name: ghcr-secret
       restartPolicy: Never
       containers:
         - name: migration
-          image: ghcr.io/olyxz16/go-chi-oauth-psql/migration:latest
+          image: ghcr.io/olyxz16/url-minifier/migration:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
           env: 
             - name: "DATABASE_URL"
               valueFrom:

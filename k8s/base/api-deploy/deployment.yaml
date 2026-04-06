@@ -2,25 +2,56 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: api-deployment
-  namespace: template
+  namespace: url-minifier
   labels:
-    app: template-api
+    app: url-minifier-api
 spec:
-  replicas: 1
+  replicas: 3
   selector:
     matchLabels:
-      app: template-api
+      app: url-minifier-api
   template:
     metadata:
       labels:
-        app: template-api
+        app: url-minifier-api
     spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        seccompProfile:
+          type: RuntimeDefault
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchLabels:
+                    app: url-minifier-api
+                topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: ghcr-secret
       containers:
         - name: api
-          image: ghcr.io/olyxz16/go-chi-oauth-psql/api:latest
+          image: ghcr.io/olyxz16/url-minifier/api:latest
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
           env:
+            - name: GOMEMLIMIT
+              value: "230Mi"
             - name: POSTGRES_USER
               value: user
             - name: POSTGRES_PASSWORD

@@ -2,15 +2,15 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: api-config
-  namespace: template
+  namespace: url-minifier
 data:
   HOST: "0.0.0.0"
   PORT: "8080"
   DEBUG: "false"
-  POSTGRES_HOST: "postgres-postgresql.template.svc.cluster.local"
+  POSTGRES_HOST: "postgres-postgresql.url-minifier.svc.cluster.local"
   POSTGRES_PORT: "5432"
   POSTGRES_DB: "database"
-  REDIS_HOST: "redis-master.template.svc.cluster.local"
+  REDIS_HOST: "redis-master.url-minifier.svc.cluster.local"
   REDIS_PORT: "6379"
   REDIS_DB: "0"
-  GOOGLE_CALLBACK_URL: ""
+  GOOGLE_CALLBACK_URL: "https://template.olyxz16.fr/auth/google/callback"

@@ -14,7 +14,7 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: redis
-  namespace: template
+  namespace: url-minifier
 spec:
   interval: 5m
   chart:
