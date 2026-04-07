@@ -10,6 +10,7 @@ import (
 
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/api/middlewares"
 
+	authcontroller "github.com/Olyxz16/go-chi-oauth-psql/internal/auth/controller"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/services"
 	urlcontroller "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/controller"
 	urlservice "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/service"
@@ -27,10 +28,10 @@ func RegisterRoutes(userService *services.UserService, tokenService *services.To
 
 	r.Handle("/metrics", promhttp.Handler())
 
-	r.Group(func (r chi.Router) {
+	r.Group(func(r chi.Router) {
 		r.Use(middleware.Logger)
 		r.Use(middlewares.RateLimitMiddleware(limiter))
-		r.Mount("/auth", controller.AuthController(userService, tokenService, googleClientID))
+		r.Mount("/auth", authcontroller.AuthController(userService, tokenService, googleClientID))
 		r.Mount("/urls", urlcontroller.UrlController(urlService, tokenService))
 	})
 
