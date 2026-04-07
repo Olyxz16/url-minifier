@@ -35,3 +35,34 @@ processes:
         condition: process_healthy
     availability:
       restart: "on_failure"
+
+  migrate:
+    command: |
+      atlas migrate apply \
+        --dir "file://internal/db/migrations" \
+        --url "postgres://postgres@127.0.0.1:5432/app?sslmode=disable"
+    depends_on:
+      create-db:
+        condition: process_completed_successfully
+    availability:
+      restart: "on_failure"
+
+  redis:
+    command: redis-server --port 6379 --bind 127.0.0.1
+    readiness_probe:
+      exec:
+        command: redis-cli -p 6379 ping | grep PONG
+      initial_delay_seconds: 1
+      period_seconds: 2
+    availability:
+      restart: "on_failure"
+
+  api:
+    command: air -c air.api.toml
+    depends_on:
+      migrate:
+        condition: process_completed_successfully
+      redis:
+        condition: process_healthy
+    availability:
+      restart: "on_failure"
