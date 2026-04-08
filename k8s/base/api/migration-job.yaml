@@ -5,7 +5,7 @@ metadata:
   namespace: url-minifier
 spec:
   backoffLimit: 3
-  ttlSecondsAfterFinished: 600
+  ttlSecondsAfterFinished: 0
   template:
     spec:
       securityContext:
@@ -28,8 +28,8 @@ spec:
               drop:
                 - ALL
           env: 
-            - name: "DATABASE_URL"
+            - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
-                  name: "api-secrets"
-                  key: "database-url"
+                  name: api-secrets
+                  key: database-url
