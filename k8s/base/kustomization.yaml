@@ -4,6 +4,5 @@ resources:
   - namespace.yaml
   - helm-repositories.yaml
   - api
-  - api-deploy
   - postgres
   - redis

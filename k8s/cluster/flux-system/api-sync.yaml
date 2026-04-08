@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: url-minifier-repo
-  path: ./k8s/base/api-deploy
+  path: ./k8s/base/api
   prune: true
   decryption:
     provider: sops
