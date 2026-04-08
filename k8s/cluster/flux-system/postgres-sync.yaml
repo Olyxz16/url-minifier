@@ -1,10 +1,11 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: postgres-app
+  name: url-minifier-postgres-sync
   namespace: flux-system
 spec:
   interval: 5m
+  targetNamespace: url-minifier
   sourceRef:
     kind: GitRepository
     name: flux-system
@@ -13,4 +14,4 @@ spec:
   decryption:
     provider: sops
     secretRef:
-      name: sops-age
+      name: url-minifier-sops-age
