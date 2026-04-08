@@ -33,6 +33,15 @@ spec:
                 topologyKey: kubernetes.io/hostname
       imagePullSecrets:
         - name: ghcr-secret
+      initContainers:
+        - name: db-migration
+          image: ghcr.io/olyxz16/url-minifier/migration:latest
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: api-secrets
+                  key: database-url
       containers:
         - name: api
           image: ghcr.io/olyxz16/url-minifier/api:latest

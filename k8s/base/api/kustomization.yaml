@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - config.yaml
   - secrets.yaml
-  - migration-job.yaml
