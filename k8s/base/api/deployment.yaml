@@ -91,15 +91,19 @@ spec:
                 name: api-config
           ports:
             - containerPort: 8080
+          startupProbe:
+            httpGet:
+              path: /healthz
+              port: 8080
+            periodSeconds: 1
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /healthz
               port: 8080
-            initialDelaySeconds: 5
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /healthz
               port: 8080
-            initialDelaySeconds: 10
             periodSeconds: 30
