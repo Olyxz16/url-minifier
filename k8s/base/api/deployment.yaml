@@ -59,8 +59,6 @@ spec:
               cpu: 500m
               memory: 256Mi
           env:
-            - name: GOMEMLIMIT
-              value: "230Mi"
             - name: POSTGRES_USER
               value: user
             - name: POSTGRES_PASSWORD

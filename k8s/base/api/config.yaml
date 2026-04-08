@@ -14,3 +14,4 @@ data:
   REDIS_PORT: "6379"
   REDIS_DB: "0"
   GOOGLE_CALLBACK_URL: "https://template.olyxz16.fr/auth/google/callback"
+  GOMEMLIMIT: 230MiB
