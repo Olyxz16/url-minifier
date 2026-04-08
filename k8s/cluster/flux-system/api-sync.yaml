@@ -8,7 +8,7 @@ spec:
   targetNamespace: url-minifier
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: url-minifier-repo
   path: ./k8s/base/api
   prune: true
   decryption:
@@ -31,7 +31,7 @@ spec:
   targetNamespace: url-minifier
   sourceRef:
     kind: GitRepository
-    name: flux-system
+    name: url-minifier-repo
   dependsOn:
     - name: api-migration
   path: ./k8s/base/api-deploy
@@ -40,3 +40,14 @@ spec:
     provider: sops
     secretRef:
       name: url-minifier-sops-age
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: url-minifier-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/Olyxz16/url-minifier.git
+  ref:
+    branch: main
