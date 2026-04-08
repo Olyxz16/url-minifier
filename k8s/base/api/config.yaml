@@ -13,5 +13,5 @@ data:
   REDIS_HOST: "redis-master.url-minifier.svc.cluster.local"
   REDIS_PORT: "6379"
   REDIS_DB: "0"
-  GOOGLE_CALLBACK_URL: "https://template.olyxz16.fr/auth/google/callback"
+  GOOGLE_CALLBACK_URL: "https://url-minifier.olyxz16.fr/auth/google/callback"
   GOMEMLIMIT: 230MiB
