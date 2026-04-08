@@ -33,7 +33,7 @@ spec:
     kind: GitRepository
     name: url-minifier-repo
   dependsOn:
-    - name: api-migration
+    - name: url-minifier-api-migration-sync
   path: ./k8s/base/api-deploy
   prune: true
   decryption:
