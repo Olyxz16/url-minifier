@@ -46,7 +46,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		Handler: api.RegisterRoutes(userService, tokenService, urlService, gothConf.GoogleAccessKeyId, limiter),
+		Handler: api.RegisterRoutes(userService, tokenService, urlService, gothConf.GoogleAccessKeyId, limiter, cfg.RateLimitRPM),
 	}
 
 	if err = server.ListenAndServe() ; err != nil {

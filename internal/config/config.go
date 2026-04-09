@@ -5,10 +5,11 @@ import (
 )
 
 type ServerConfig struct {
-	Host        string `env:"HOST"  envDefault:"0.0.0.0"`
-	Port        int    `env:"PORT"  envDefault:"8080"`
-	Debug       bool   `env:"DEBUG" envDefault:"false"`
-	TokenSecret string `env:"TOKEN_SECRET" envDefault:"supersecretkeymustbe32byteslong!"`
+	Host         string `env:"HOST"  envDefault:"0.0.0.0"`
+	Port         int    `env:"PORT"  envDefault:"8080"`
+	Debug        bool   `env:"DEBUG" envDefault:"false"`
+	TokenSecret  string `env:"TOKEN_SECRET" envDefault:"supersecretkeymustbe32byteslong!"`
+	RateLimitRPM int    `env:"RATE_LIMIT_RPM" envDefault:"30"`
 }
 
 type PostgresConfig struct {

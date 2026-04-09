@@ -1,0 +1,44 @@
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-ratelimit
+  namespace: url-minifier
+spec:
+  rateLimit:
+    average: 100
+    burst: 50
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-compress
+  namespace: url-minifier
+spec:
+  compress: {}
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-headers
+  namespace: url-minifier
+spec:
+  headers:
+    browserXssFilter: true
+    contentTypeNosniff: true
+    forceSTSHeader: true
+    stsIncludeSubdomains: true
+    stsPreload: true
+    stsSeconds: 31536000
+    frameDeny: true
+
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: api-circuitbreaker
+  namespace: url-minifier
+spec:
+  circuitBreaker:
+    expression: "ResponseCodeRatio(500, 600, 0, 600) > 0.10"

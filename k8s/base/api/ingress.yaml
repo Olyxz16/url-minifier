@@ -5,10 +5,11 @@ metadata:
   namespace: url-minifier
   annotations:
     cert-manager.io/cluster-issuer: "letsencrypt-dns-prod"
+    traefik.ingress.kubernetes.io/router.middlewares: url-minifier-api-headers@kubernetescrd,url-minifier-api-compress@kubernetescrd,url-minifier-api-ratelimit@kubernetescrd,url-minifier-api-circuitbreaker@kubernetescrd
 spec:
   ingressClassName: traefik
   rules:
-    - host: template.olyxz16.fr
+    - host: url-minifier.olyxz16.fr
       http:
         paths:
           - path: /
@@ -21,5 +22,5 @@ spec:
 
   tls:
     - hosts:
-        - template.olyxz16.fr
+        - url-minifier.olyxz16.fr
       secretName: api-tls-cert
