@@ -17,6 +17,10 @@ spec:
         - protocol: TCP
           port: 8080
   egress:
+    # Allow HTTPS
+    - ports:
+        - protocol: TCP
+          port: 443
     # Allow DNS
     - to:
         - namespaceSelector:
