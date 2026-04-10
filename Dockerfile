@@ -25,10 +25,11 @@ WORKDIR /app
 
 LABEL org.opencontainers.image.source=https://github.com/Olyxz16/go-chi-oauth-psql
 
+ENV SSL_CERT_FILE=/certs/ca-certificates.crt
 ENV PORT=8080
 EXPOSE 8080
 
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs
+COPY --from=build /etc/ssl/certs/ca-certificates.crt /certs
 COPY --from=build /etc/passwd /etc/passwd
 COPY --from=build /etc/group /etc/group
 
