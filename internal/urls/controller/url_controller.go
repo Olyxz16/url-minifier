@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/api/middlewares"
@@ -45,6 +46,7 @@ func HandleCreateUrl(s *service.UrlService) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req CreateUrlRequest
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			zap.L().Error("Error decoding request", zap.Any("req", req), zap.Error(err))
 			http.Error(w, "Invalid request body", http.StatusBadRequest)
 			return
 		}
@@ -57,13 +59,14 @@ func HandleCreateUrl(s *service.UrlService) http.HandlerFunc {
 
 		userID, err := uuid.Parse(userIDStr)
 		if err != nil {
+			zap.L().Error("Error parsing user id", zap.String("user_id", userID.String()), zap.Error(err))
 			http.Error(w, "Invalid user ID in context", http.StatusUnauthorized)
 			return
 		}
 
 		url, err := s.CreateUrl(r.Context(), userID, req.RedirectUrl)
 		if err != nil {
-			zap.L().Error("Failed to create short URL", zap.Error(err), zap.String("user_id", userID.String()))
+			zap.L().Error("Error creating short url", zap.String("user_id", userID.String()), zap.Error(err))
 			http.Error(w, "Failed to create short URL", http.StatusInternalServerError)
 			return
 		}
@@ -85,15 +88,27 @@ func HandleRedirect(s *service.UrlService) http.HandlerFunc {
 		url, err := s.GetUrlByShort(r.Context(), shortUrl)
 		if err != nil {
 			if errors.Is(err, model.ErrUrlNotFound) {
+				zap.L().Warn("Failed to fetch url", zap.String("shortUrl", shortUrl))
 				http.Error(w, "URL not found", http.StatusNotFound)
 				return
 			}
+			zap.L().Error("Error fetching url", zap.String("shortUrl", shortUrl), zap.Error(err))
 			http.Error(w, "Failed to fetch URL", http.StatusInternalServerError)
 			return
 		}
 
 		go func() {
-			s.IncrementHitCount(context.Background(), url.ID)
+			var err error
+			retries := 3
+			for retries > 0 {
+				err = s.IncrementHitCount(context.Background(), url.ID)
+				retries--
+			}
+			if retries == 0 {
+				zap.L().Error(fmt.Sprintf("Error incrementing url hit count after %d tries", retries), zap.Any("url", url), zap.Error(err))
+			} else if err != nil {
+				zap.L().Warn("Failed incrementing url hit count once but then succeeded", zap.Error(err))
+			}
 		}()
 
 		http.Redirect(w, r, url.RedirectUrl, http.StatusMovedPermanently)
@@ -112,9 +127,11 @@ func HandleGetUrlInfo(s *service.UrlService) http.HandlerFunc {
 		url, err := s.GetUrlById(r.Context(), id)
 		if err != nil {
 			if errors.Is(err, model.ErrUrlNotFound) {
+				zap.L().Warn("Failed to fetch url", zap.String("id", idStr))
 				http.Error(w, "URL not found", http.StatusNotFound)
 				return
 			}
+			zap.L().Error("Error fetching url", zap.String("id", idStr), zap.Error(err))
 			http.Error(w, "Failed to fetch URL", http.StatusInternalServerError)
 			return
 		}
@@ -135,6 +152,7 @@ func HandleDeleteUrl(s *service.UrlService) http.HandlerFunc {
 
 		err = s.DeleteUrl(r.Context(), id)
 		if err != nil {
+			zap.L().Error("Error fetching url", zap.String("id", idStr), zap.Error(err))
 			http.Error(w, "Failed to delete URL", http.StatusInternalServerError)
 			return
 		}
