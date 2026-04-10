@@ -81,33 +81,3 @@ jobs:
           push: true
           tags: ${{ steps.migration-meta.outputs.tags }}
           labels: ${{ steps.migration-meta.outputs.labels }}
-
-  update-manifests:
-    needs: [publish-api, publish-migration]
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-
-      - name: Update image tags
-        run: |
-          SHORT_SHA="${GITHUB_SHA::7}"
-          TAG="sha-${SHORT_SHA}"
-          sed -i "s|image: ghcr.io/${{ github.repository }}/api:.*|image: ghcr.io/${{ github.repository }}/api:${TAG}|" k8s/base/api-deploy/deployment.yaml
-          sed -i "s|image: ghcr.io/${{ github.repository }}/migration:.*|image: ghcr.io/${{ github.repository }}/migration:${TAG}|" k8s/base/api/migration-job.yaml
-
-      - name: Commit and push
-        run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
-          git add -A
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update images to sha-${GITHUB_SHA::7}"
-            git push
-          fi
