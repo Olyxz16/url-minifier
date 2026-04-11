@@ -41,7 +41,7 @@ func main() {
 	userRepo := repositories.NewUserRepository(pool)
 	userService := services.NewUserService(userRepo)
 
-	tokenSecret := []byte(strings.TrimSpace(cfg.TokenSecret))
+	tokenSecret := strings.TrimSpace(cfg.TokenSecret)
 	tokenService, err := services.NewTokenService(tokenSecret)
 	if err != nil {
 		panic(err)

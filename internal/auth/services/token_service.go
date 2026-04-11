@@ -1,6 +1,7 @@
 package services
 
 import (
+	"encoding/base64"
 	"fmt"
 	"time"
 
@@ -13,7 +14,11 @@ type TokenService struct {
 	paseto *paseto.V2
 }
 
-func NewTokenService(secret []byte) (*TokenService, error) {
+func NewTokenService(b64SecretStr string) (*TokenService, error) {
+	secret, err := base64.StdEncoding.DecodeString(b64SecretStr)
+	if err != nil {
+		return nil, err
+	}
 	if len(secret) != 32 {
 		return nil, fmt.Errorf("Token secret must be 32 bytes long")
 	}
