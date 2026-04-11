@@ -24,14 +24,14 @@ type PostgresConfig struct {
 type GothConfig struct {
 	GoogleAccessKeyId     string `env:"GOOGLE_ACCESS_KEY_ID,required"`
 	GoogleSecretAccessKey string `env:"GOOGLE_SECRET_ACCESS_KEY,required"`
-	GoogleCallbackUrl	  string `env:"GOOGLE_CALLBACK_URL,required"`
+	GoogleCallbackUrl     string `env:"GOOGLE_CALLBACK_URL,required"`
 }
 
 type RedisConfig struct {
-    Host     string `env:"REDIS_HOST" envDefault:"localhost"`
-    Port     int    `env:"REDIS_PORT" envDefault:"6379"`
-    Password string `env:"REDIS_PASSWORD" envDefault:""`
-    DB       int    `env:"REDIS_DB" envDefault:"0"`
+	Host     string `env:"REDIS_HOST" envDefault:"localhost"`
+	Port     int    `env:"REDIS_PORT" envDefault:"6379"`
+	Password string `env:"REDIS_PASSWORD" envDefault:""`
+	DB       int    `env:"REDIS_DB" envDefault:"0"`
 }
 
 func NewServerConfig() *ServerConfig {
@@ -59,9 +59,9 @@ func NewGothConfig() *GothConfig {
 }
 
 func NewRedisConfig() *RedisConfig {
-    cfg := &RedisConfig{}
-    if err := env.Parse(cfg); err != nil {
-        panic(err.Error())
-    }
-    return cfg
+	cfg := &RedisConfig{}
+	if err := env.Parse(cfg); err != nil {
+		panic(err.Error())
+	}
+	return cfg
 }

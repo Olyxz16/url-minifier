@@ -3,13 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/api"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/repositories"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/services"
+	"github.com/Olyxz16/go-chi-oauth-psql/internal/config"
 	urlrepos "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/repositories"
 	urlservices "github.com/Olyxz16/go-chi-oauth-psql/internal/urls/service"
-	"github.com/Olyxz16/go-chi-oauth-psql/internal/config"
 	"github.com/go-redis/redis_rate/v10"
 	"go.uber.org/zap"
 )
@@ -39,7 +40,12 @@ func main() {
 	cfg := config.NewServerConfig()
 	userRepo := repositories.NewUserRepository(pool)
 	userService := services.NewUserService(userRepo)
-	tokenService := services.NewTokenService(cfg)
+
+	tokenSecret := []byte(strings.TrimSpace(cfg.TokenSecret))
+	tokenService, err := services.NewTokenService(tokenSecret)
+	if err != nil {
+		panic(err)
+	}
 
 	urlRepo := urlrepos.NewUrlRepository(pool)
 	urlService := urlservices.NewUrlService(urlRepo)
@@ -49,9 +55,8 @@ func main() {
 		Handler: api.RegisterRoutes(userService, tokenService, urlService, gothConf.GoogleAccessKeyId, limiter, cfg.RateLimitRPM),
 	}
 
-	if err = server.ListenAndServe() ; err != nil {
+	if err = server.ListenAndServe(); err != nil {
 		logger.Fatal("Server failed. ", zap.Error(err))
 	}
 
 }
-
