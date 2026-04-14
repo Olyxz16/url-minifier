@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  # Standard Rate Limit for Production
+  - target:
+      kind: ConfigMap
+      name: api-config
+    patch: |-
+      - op: replace
+        path: /data/RATE_LIMIT_RPM
+        value: "100"
+
+  # Standard Traefik Rate Limit for Production
+  - target:
+      kind: Middleware
+      name: api-ratelimit
+    patch: |-
+      - op: replace
+        path: /spec/rateLimit/average
+        value: 100
+      - op: replace
+        path: /spec/rateLimit/burst
+        value: 50

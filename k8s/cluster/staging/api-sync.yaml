@@ -9,7 +9,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: url-minifier-repo
-  path: ./k8s/base/api
+  path: ./k8s/overlays/staging
   prune: true
   decryption:
     provider: sops
@@ -25,4 +25,4 @@ spec:
   interval: 1m
   url: https://github.com/Olyxz16/url-minifier.git
   ref:
-    branch: main
+    branch: staging

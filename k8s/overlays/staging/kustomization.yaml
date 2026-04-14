@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base
+
+patches:
+  # Override Application Rate Limit (ConfigMap)
+  - target:
+      kind: ConfigMap
+      name: api-config
+    patch: |-
+      - op: replace
+        path: /data/RATE_LIMIT_RPM
+        value: "100000"
+
+  # Override Traefik Rate Limit (Middleware)
+  - target:
+      kind: Middleware
+      name: api-ratelimit
+    patch: |-
+      - op: replace
+        path: /spec/rateLimit/average
+        value: 100000
+      - op: replace
+        path: /spec/rateLimit/burst
+        value: 100000

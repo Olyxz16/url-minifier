@@ -1,0 +1,28 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: url-minifier-api-sync
+  namespace: flux-system
+spec:
+  interval: 5m
+  targetNamespace: url-minifier
+  sourceRef:
+    kind: GitRepository
+    name: url-minifier-repo
+  path: ./k8s/overlays/production
+  prune: true
+  decryption:
+    provider: sops
+    secretRef:
+      name: url-minifier-sops-age
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: url-minifier-repo
+  namespace: flux-system
+spec:
+  interval: 1m
+  url: https://github.com/Olyxz16/url-minifier.git
+  ref:
+    branch: main
