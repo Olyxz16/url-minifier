@@ -100,14 +100,14 @@ func HandleRedirect(s *service.UrlService) http.HandlerFunc {
 		go func() {
 			var err error
 			retries := 3
-			for retries > 0 {
-				err = s.IncrementHitCount(context.Background(), url.ID)
+			remaining := retries
+			for remaining > 0 {
+				err = s.IncrementHitCount(r.Context(), url.ID)
 				retries--
+				zap.L().Warn("Failed incrementing url hits but then succeeded", zap.Int("retries", retries-remaining), zap.Any("url", url), zap.Error(err))
 			}
-			if retries == 0 {
-				zap.L().Error(fmt.Sprintf("Error incrementing url hit count after %d tries", retries), zap.Any("url", url), zap.Error(err))
-			} else if err != nil {
-				zap.L().Warn("Failed incrementing url hit count once but then succeeded", zap.Error(err))
+			if remaining == 0 {
+				zap.L().Error(fmt.Sprintf("Error incrementing url hits"), zap.Int("retries", retries), zap.Any("url", url), zap.Error(err))
 			}
 		}()
 
