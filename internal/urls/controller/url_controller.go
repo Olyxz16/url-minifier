@@ -102,7 +102,7 @@ func HandleRedirect(s *service.UrlService) http.HandlerFunc {
 			remaining := retries
 			for remaining > 0 {
 				err = s.IncrementHitCount(r.Context(), url.ID)
-				retries--
+				remaining--
 				zap.L().Warn("Failed incrementing url hits but then succeeded", zap.Int("retries", retries-remaining), zap.Any("url", url), zap.Error(err))
 			}
 			if remaining == 0 {
