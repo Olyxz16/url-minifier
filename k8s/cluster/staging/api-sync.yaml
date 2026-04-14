@@ -70,6 +70,6 @@ spec:
       author:
         email: fluxcdbot@users.noreply.github.com
         name: fluxcdbot
-    messageTemplate: 'chore: update image: {{range .Changed.Changes}}{{print .OldValue}} -> {{print .NewValue}}{{end}}'
+      messageTemplate: 'chore: update image: {{range .Changed.Changes}}{{print .OldValue}} -> {{print .NewValue}}{{end}}'
     push:
       branch: staging
