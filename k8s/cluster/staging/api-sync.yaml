@@ -46,7 +46,7 @@ spec:
   imageRepositoryRef:
     name: url-minifier-image-repo
   policy:
-    alphabetical:
+    numerical:
       order: asc
   filterTags:
     pattern: '^staging-(?P<ts>[0-9]+)-[a-f0-9]+$'
