@@ -50,6 +50,7 @@ if [ -z "$TEST_NAME" ]; then
     echo -e "  ${GREEN}stress${NC}  - Find breaking points (33 min)"
     echo -e "  ${GREEN}spike${NC}   - Sudden traffic spikes (16 min)"
     echo -e "  ${GREEN}soak${NC}    - Long-term stability (70 min)"
+    echo -e "  ${GREEN}failure${NC} - Runs till failure"
     echo -e "  ${GREEN}all${NC}     - Run smoke + load tests\n"
     
     read -p "Select test: " TEST_NAME
@@ -101,6 +102,14 @@ case $TEST_NAME in
             -e BASE_URL="$BASE_URL" \
             -e ACCESS_TOKEN="$ACCESS_TOKEN"
         ;;
+
+    failure)
+        echo -e "${BOLD}Running Failure Test...${NC}\n"
+        k6 run "$K6_DIR/tests/failure.js" \
+            -e BASE_URL="$BASE_URL" \
+            -e ACCESS_TOKEN="$ACCESS_TOKEN"
+        ;;
+    
     
     all)
         echo -e "${BOLD}Running Smoke + Load Tests...${NC}\n"
@@ -120,7 +129,7 @@ case $TEST_NAME in
     
     *)
         echo -e "${RED}Invalid test name: $TEST_NAME${NC}"
-        echo -e "Valid options: smoke, load, stress, spike, soak, all"
+        echo -e "Valid options: smoke, load, stress, spike, soak, failure, all"
         exit 1
         ;;
 esac

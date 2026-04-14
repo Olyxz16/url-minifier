@@ -34,3 +34,4 @@ sops.agekey
 # Devbox
 devbox.d/
 dump.rdb
+k6/.env.k6
