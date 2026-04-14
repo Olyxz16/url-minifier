@@ -8,4 +8,4 @@ spec:
     spec:
       containers:
         - name: api
-          image: ghcr.io/olyxz16/url-minifier/api:staging-a1b2c3 # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
+          image: ghcr.io/olyxz16/url-minifier/api:staging-1776200375-6ef60a9 # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
