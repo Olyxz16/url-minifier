@@ -11,4 +11,4 @@ spec:
           image: ghcr.io/olyxz16/url-minifier/migration:staging-1776207359-b7c42c0 # {"$imagepolicy": "flux-system:url-minifier-migration-image-policy"}
       containers:
         - name: api
-          image: ghcr.io/olyxz16/url-minifier/api:staging-1776206727-42e8dd1 # {"$imagepolicy": "flux-system:url-minifier-api-image-policy"}
+          image: ghcr.io/olyxz16/url-minifier/api:staging-1776207358-b7c42c0 # {"$imagepolicy": "flux-system:url-minifier-api-image-policy"}
