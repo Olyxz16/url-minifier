@@ -8,7 +8,7 @@ spec:
     spec:
       initContainers:
         - name: db-migration
-          image: ghcr.io/olyxz16/url-minifier/api:staging-1776202486-254d83b # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
+          image: ghcr.io/olyxz16/url-minifier/migration:staging-1776202486-254d83b # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
       containers:
         - name: api
           image: ghcr.io/olyxz16/url-minifier/api:staging-1776202486-254d83b # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
