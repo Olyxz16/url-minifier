@@ -3,6 +3,7 @@ package config
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 )
@@ -25,11 +26,20 @@ func (c *PostgresConfig) URL() string {
 
 // NewPostgresPool creates a pgxpool connection pool.
 func NewPostgresPool(cfg *PostgresConfig) (*pgxpool.Pool, error) {
-	pool, err := pgxpool.New(context.Background(), cfg.DSN())
+	poolConfig, err := pgxpool.ParseConfig(cfg.DSN())
 	if err != nil {
-		return nil, fmt.Errorf("unable to create connection pool: %w", err)
+		return nil, fmt.Errorf("Unable to create connection pool: %w", err)
 	}
 
+	poolConfig.MaxConns = 15
+	poolConfig.MinConns = 2
+	poolConfig.MaxConnLifetime = 1 * time.Hour
+	poolConfig.MaxConnIdleTime = 30 * time.Minute
+
+	pool, err := pgxpool.NewWithConfig(context.Background(), poolConfig)
+	if err != nil {
+		return nil, fmt.Errorf("Unable to create connection pool : %w", err)
+	}
 	if err := pool.Ping(context.Background()); err != nil {
 		return nil, fmt.Errorf("unable to reach postgres: %w", err)
 	}
