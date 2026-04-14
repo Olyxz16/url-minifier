@@ -6,6 +6,9 @@ metadata:
 spec:
   template:
     spec:
+      initContainers:
+        - name: db-migration
+          image: ghcr.io/olyxz16/url-minifier/migration:v1.0.0 # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
       containers:
         - name: api
           image: ghcr.io/olyxz16/url-minifier/api:v1.0.0 # {"$imagepolicy": "flux-system:url-minifier-image-policy"}
