@@ -3,6 +3,3 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - helm-repositories.yaml
-  - api
-  - postgres
-  - redis

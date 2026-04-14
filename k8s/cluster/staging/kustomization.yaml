@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   - ./flux-system
+  - core-sync.yaml
   - api-sync.yaml
   - postgres-sync.yaml
   - redis-sync.yaml

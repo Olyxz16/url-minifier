@@ -5,12 +5,13 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m
-  targetNamespace: url-minifier
   sourceRef:
     kind: GitRepository
     name: url-minifier-repo
   path: ./k8s/overlays/staging
   prune: true
+  dependsOn:
+    - name: url-minifier-core-sync
   decryption:
     provider: sops
     secretRef:

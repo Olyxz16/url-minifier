@@ -5,12 +5,13 @@ metadata:
   namespace: flux-system
 spec:
   interval: 5m
-  targetNamespace: url-minifier
   sourceRef:
     kind: GitRepository
     name: flux-system
   path: ./k8s/base/redis
   prune: true
+  dependsOn:
+    - name: url-minifier-core-sync
   decryption:
     provider: sops
     secretRef:
