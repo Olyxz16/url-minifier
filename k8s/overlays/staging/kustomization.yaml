@@ -27,3 +27,4 @@ patches:
         value: 100000
 
   - path: deployment-image-patch.yaml
+  - path: postgres.yaml
