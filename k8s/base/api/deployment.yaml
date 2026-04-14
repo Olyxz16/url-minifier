@@ -31,6 +31,13 @@ spec:
                   matchLabels:
                     app: url-minifier-api
                 topologyKey: kubernetes.io/hostname
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: url-minifier-api
       imagePullSecrets:
         - name: ghcr-secret
       initContainers:
