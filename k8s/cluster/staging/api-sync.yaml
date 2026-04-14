@@ -33,7 +33,7 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
 metadata:
-  name: url-minifier-image-repo
+  name: url-minifier-api-image-repo
   namespace: flux-system
 spec:
   image: ghcr.io/olyxz16/url-minifier/api
@@ -42,11 +42,35 @@ spec:
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImagePolicy
 metadata:
-  name: url-minifier-image-policy
+  name: url-minifier-api-image-policy
   namespace: flux-system
 spec:
   imageRepositoryRef:
-    name: url-minifier-image-repo
+    name: url-minifier-api-image-repo
+  policy:
+    numerical:
+      order: asc
+  filterTags:
+    pattern: '^staging-(?P<ts>[0-9]+)-[a-f0-9]+$'
+    extract: '$ts'
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImageRepository
+metadata:
+  name: url-minifier-migration-image-repo
+  namespace: flux-system
+spec:
+  image: ghcr.io/olyxz16/url-minifier/migration
+  interval: 1m
+---
+apiVersion: image.toolkit.fluxcd.io/v1
+kind: ImagePolicy
+metadata:
+  name: url-minifier-migration-image-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: url-minifier-migration-image-repo
   policy:
     numerical:
       order: asc
