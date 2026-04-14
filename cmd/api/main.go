@@ -1,9 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
+	"os"
+	"os/signal"
 	"strings"
+	"syscall"
+	"time"
 
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/api"
 	"github.com/Olyxz16/go-chi-oauth-psql/internal/auth/repositories"
@@ -51,12 +56,29 @@ func main() {
 	urlService := urlservices.NewUrlService(urlRepo)
 
 	server := &http.Server{
-		Addr:    fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
-		Handler: api.RegisterRoutes(userService, tokenService, urlService, gothConf.GoogleAccessKeyId, limiter, cfg.RateLimitRPM),
+		Addr:         fmt.Sprintf("%s:%d", cfg.Host, cfg.Port),
+		Handler:      api.RegisterRoutes(userService, tokenService, urlService, gothConf.GoogleAccessKeyId, limiter, cfg.RateLimitRPM),
+		ReadTimeout:  10 * time.Second,
+		WriteTimeout: 10 * time.Second,
+		IdleTimeout:  30 * time.Second,
 	}
 
-	if err = server.ListenAndServe(); err != nil {
-		logger.Fatal("Server failed. ", zap.Error(err))
+	go func() {
+		if err := server.ListenAndServe(); err != nil && err != http.ErrServerClosed {
+			logger.Fatal("Server failed. ", zap.Error(err))
+		}
+	}()
+
+	quit := make(chan os.Signal, 1)
+	signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)
+	<-quit
+	logger.Info("Shutting down server...")
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	if err := server.Shutdown(ctx); err != nil {
+		logger.Fatal("Server forced to shutdown", zap.Error(err))
 	}
 
 }
