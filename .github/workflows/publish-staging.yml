@@ -34,7 +34,7 @@ jobs:
           images: |
             ghcr.io/${{ github.repository }}/api
           tags: |
-            type=sha,format=short,prefix=staging-${{ steps.time.output.ts }}-
+            type=sha,format=short,prefix=staging-${{ steps.time.outputs.ts }}-
       
       - name: Build image
         uses: docker/build-push-action@v6
@@ -69,7 +69,7 @@ jobs:
           images: |
             ghcr.io/${{ github.repository }}/migration
           tags: |
-            type=sha,format=short,prefix=staging-${{ steps.time.output.ts }}-
+            type=sha,format=short,prefix=staging-${{ steps.time.outputs.ts }}-
       
       - name: Build image
         uses: docker/build-push-action@v6
