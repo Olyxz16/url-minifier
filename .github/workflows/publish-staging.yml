@@ -1,9 +1,9 @@
-name: publish
+name: Publish to staging
 
 on:
   push:
-    tags:
-      - 'v*'
+    branches:
+      - staging
 
 permissions:
   contents: read
@@ -23,19 +23,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get timestamp
+        id: time
+        run: echo "ts=$(date +%s)" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: api-meta
         uses: docker/metadata-action@v5
         with:
-          flavor: |
-            latest=auto
           images: |
             ghcr.io/${{ github.repository }}/api
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
+            type=sha,format=short,prefix=staging-${{ steps.time.output.ts }}-
       
       - name: Build image
         uses: docker/build-push-action@v6
@@ -59,19 +58,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Get timestamp
+        id: time
+        run: echo "ts=$(date +%s)" >> $GITHUB_OUTPUT
+
       - name: Docker meta
         id: migration-meta
         uses: docker/metadata-action@v5
         with:
-          flavor: |
-            latest=auto
           images: |
             ghcr.io/${{ github.repository }}/migration
           tags: |
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            type=sha
+            type=sha,format=short,prefix=staging-${{ steps.time.output.ts }}-
       
       - name: Build image
         uses: docker/build-push-action@v6

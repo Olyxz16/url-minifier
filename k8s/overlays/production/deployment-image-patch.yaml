@@ -1,0 +1,10 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: url-minifier-api-deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: api
+          image: ghcr.io/olyxz16/url-minifier/api:v1.0.0 # {"$imagepolicy": "flux-system:url-minifier-image-policy"}

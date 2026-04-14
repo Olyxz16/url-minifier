@@ -27,3 +27,46 @@ spec:
   url: https://github.com/Olyxz16/url-minifier.git
   ref:
     branch: main
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImageRepository
+metadata:
+  name: url-minifier-image-repo
+  namespace: flux-system
+spec:
+  image: ghcr.io/olyxz16/url-minifier/api
+  interval: 1m
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta2
+kind: ImagePolicy
+metadata:
+  name: url-minifier-image-policy
+  namespace: flux-system
+spec:
+  imageRepositoryRef:
+    name: url-minifier-image-repo
+  policy:
+    semver:
+      range: '>=1.0.0'
+---
+apiVersion: image.toolkit.fluxcd.io/v1beta1
+kind: ImageUpdateAutomation
+metadata:
+  name: url-minifier-flux-image-updates
+  namespace: flux-system
+spec:
+  interval: 1m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+  git:
+    checkout:
+      ref:
+        branch: main
+    commit:
+      author:
+        email: fluxcdbot@users.noreply.github.com
+        name: fluxcdbot
+      messageTemplate: 'chore: update image to {{ range .Updated.Images }}{{ println . }}{{ end }}'
+    push:
+      branch: main

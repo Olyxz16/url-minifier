@@ -44,7 +44,7 @@ spec:
                   key: database-url
       containers:
         - name: api
-          image: ghcr.io/olyxz16/url-minifier/api:latest
+          image: ghcr.io/olyxz16/url-minifier/api:v1.0.0 # {"$imagepolicy": "url-minifier-image-policy"}
           securityContext:
             allowPrivilegeEscalation: false
             readOnlyRootFilesystem: true

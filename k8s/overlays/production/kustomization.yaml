@@ -25,3 +25,5 @@ patches:
       - op: replace
         path: /spec/rateLimit/burst
         value: 50
+
+  - path: deployment-image-patch.yaml
