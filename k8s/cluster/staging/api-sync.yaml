@@ -48,9 +48,9 @@ spec:
   policy:
     alphabetical:
       order: asc
-    filterTags:
-      pattern: '^staging-(?P<ts>[0-9]+)-[a-f0-9]+$'
-      extract: '$ts'
+  filterTags:
+    pattern: '^staging-(?P<ts>[0-9]+)-[a-f0-9]+$'
+    extract: '$ts'
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageUpdateAutomation

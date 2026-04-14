@@ -40,7 +40,8 @@ flux bootstrap github \
   --repository=url-minifier \
   --branch=staging \
   --path=k8s/cluster/staging \
-  --personal
+  --personal \
+  --components-extra=image-reflector-controller,image-automation-controller
 
 # For Production (tracks main branch)
 flux bootstrap github \
