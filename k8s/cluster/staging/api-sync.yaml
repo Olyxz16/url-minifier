@@ -28,7 +28,7 @@ spec:
   ref:
     branch: staging
   secretRef:
-    name: flux-system
+    name: url-minifier-ssh-auth
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository

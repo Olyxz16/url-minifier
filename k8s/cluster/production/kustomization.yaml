@@ -7,3 +7,4 @@ resources:
   - api-sync.yaml
   - postgres-sync.yaml
   - redis-sync.yaml
+  - ssh-secret.yaml

@@ -24,9 +24,11 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  url: https://github.com/Olyxz16/url-minifier.git
+  url: ssh://git@github.com/Olyxz16/url-minifier.git
   ref:
     branch: main
+  secretRef:
+    name: url-minifier-ssh-auth
 ---
 apiVersion: image.toolkit.fluxcd.io/v1
 kind: ImageRepository
