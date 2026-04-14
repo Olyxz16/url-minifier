@@ -1,7 +1,8 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: url-minifier-api-deployment
+  name: api-deployment
+  namespace: url-minifier
 spec:
   template:
     spec:
