@@ -9,38 +9,40 @@ This project uses [Flux CD](https://fluxcd.io/) for GitOps-based deployments. Th
   - `staging/`: Overrides for the staging environment (e.g., Rate Limit: 100,000 RPM).
   - `production/`: Overrides for the production environment (e.g., Rate Limit: 100 RPM).
 - `k8s/cluster/`: Flux bootstrap and sync definitions.
-  - `flux-system/`: Core Flux components (Bootstrap).
-  - `staging/`: Sync definitions for Staging (points to the `staging` branch).
-  - `production/`: Sync definitions for Production (points to the `main` branch).
+  - `staging/`: Self-contained Flux config for Staging (tracks the `staging` branch).
+  - `production/`: Self-contained Flux config for Production (tracks the `main` branch).
 
-## Best Practices
+## How to migrate an existing cluster
 
-Application syncs (`GitRepository` and `Kustomization` objects) should be kept outside the `flux-system` directory. This allows for:
-1. **Environment Isolation**: Each cluster can be bootstrapped to point to its own environment directory.
-2. **Branch Targeting**: Staging can track a `staging` branch while Production tracks `main`.
-3. **Clean Bootstrap**: `flux-system` remains focused on the Flux components themselves.
+If your cluster was previously bootstrapped to `./k8s/cluster` or `./k8s/cluster/flux-system`, Flux will block a simple re-bootstrap to the new path to prevent configuration loss. Follow these steps to migrate:
 
-## Deployment Commands
+### 1. Push these changes to GitHub
+Commit and push the new directory structure to both your `main` and `staging` branches.
 
-### 1. Install Flux CLI
-Follow the [official instructions](https://fluxcd.io/flux/installation/) to install the Flux CLI.
-
-### 2. Bootstrap Staging Environment
-To bootstrap a cluster for the staging environment (tracking the `staging` branch):
+### 2. Update the cluster manually
+Apply the new root Kustomization to your cluster to update the sync path:
 
 ```bash
+# For Staging
+kubectl patch kustomization flux-system -n flux-system --type='json' -p='[{"op": "replace", "path": "/spec/path", "value":"./k8s/cluster/staging"}]'
+
+# For Production
+kubectl patch kustomization flux-system -n flux-system --type='json' -p='[{"op": "replace", "path": "/spec/path", "value":"./k8s/cluster/production"}]'
+```
+
+### 3. Re-bootstrap
+Now that the path matches, you can run the bootstrap command to ensure all metadata is synchronized:
+
+```bash
+# For Staging (tracks staging branch)
 flux bootstrap github \
   --owner=Olyxz16 \
   --repository=url-minifier \
   --branch=staging \
   --path=k8s/cluster/staging \
   --personal
-```
 
-### 3. Bootstrap Production Environment
-To bootstrap a cluster for the production environment (tracking the `main` branch):
-
-```bash
+# For Production (tracks main branch)
 flux bootstrap github \
   --owner=Olyxz16 \
   --repository=url-minifier \
@@ -50,8 +52,8 @@ flux bootstrap github \
 ```
 
 ## Manual Sync
-If you make changes and want to trigger an immediate sync:
+To trigger an immediate sync after a change:
 
 ```bash
-flux reconcile kustomization url-minifier-api-sync --with-source
+flux reconcile kustomization flux-system --with-source
 ```
