@@ -77,4 +77,4 @@ spec:
       branch: staging
   update:
     path: ./k8s/overlays/staging
-    stategy: Setters
+    strategy: Setters
