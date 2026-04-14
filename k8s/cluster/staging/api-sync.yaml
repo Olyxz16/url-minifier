@@ -24,7 +24,7 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  url: https://github.com/Olyxz16/url-minifier.git
+  url: ssh://git@github.com/Olyxz16/url-minifier.git
   ref:
     branch: staging
   secretRef:
