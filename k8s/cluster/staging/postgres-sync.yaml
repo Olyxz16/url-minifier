@@ -8,7 +8,7 @@ spec:
   sourceRef:
     kind: GitRepository
     name: flux-system
-  path: ./k8s/base/postgres
+  path: ./k8s/overlays/staging/postgres
   prune: true
   dependsOn:
     - name: url-minifier-core-sync

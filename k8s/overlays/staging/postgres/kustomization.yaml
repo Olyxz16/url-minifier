@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ../../../base/postgres
+
+patches:
+  - target:
+      kind: HelmRelease
+      name: postgres
+    patch: |-
+      - op: add
+        path: /spec/values/primary/resourcesPreset
+        value: "none"
+      - op: add
+        path: /spec/values/primary/resources
+        value:
+          limits:
+            memory: "4Gi"
+            cpu: "500m"
+          requests:
+            memory: "128Mi"
+            cpu: "250m"
